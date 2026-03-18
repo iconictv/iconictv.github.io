@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Marksheet - SAPTARSHI SAMANTA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: #f0f4ff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 48px 40px 40px;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(26,26,255,0.12);
+      border-top: 5px solid #1a1aff;
+    }
+
+    .logo {
+      width: 80px; height: 80px; margin: 0 auto 18px;
+    }
+
+    .logo img {
+      width: 100%; height: 100%; object-fit: contain;
+    }
+
+    .school-name {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #1a1aff;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 20px;
+    }
+
+    .icon { font-size: 3.2rem; margin-bottom: 14px; }
+
+    .title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #1a1aff;
+      margin-bottom: 12px;
+    }
+
+    .msg1 {
+      font-size: 0.95rem;
+      color: #333;
+      line-height: 1.65;
+      margin-bottom: 8px;
+    }
+
+    .msg2 {
+      font-size: 0.92rem;
+      color: #cc0000;
+      font-weight: 700;
+      line-height: 1.65;
+      margin-bottom: 28px;
+    }
+
+    .msg2 .time {
+      color: #1a1aff;
+      font-size: 1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #1a1aff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 40px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #0000cc; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 24px 0 20px;
+    }
+
+    .student-info {
+      font-size: 0.78rem;
+      color: #888;
+    }
+    .student-info strong { color: #333; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">
+    <img src="https://www.vmhschool.com/assets/frontend/images/vmhs-logo-min.png"
+         onerror="this.style.display='none'" alt="VMHS Logo"/>
+  </div>
+
+  <div class="school-name">Vivekananda Mission High School</div>
+
+  <div class="icon">📋</div>
+
+  <div class="title">Marksheet</div>
+
+  <div class="msg1">
+    Marksheet will be shown shortly.
+  </div>
+
+  <div class="msg2">
+    All Students' Results are still not uploaded.<br>
+    Wait upto <span class="time">3:00 PM</span> and try again later.
+  </div>
+
+  <a class="btn" href="javascript:window.close()">Close</a>
+
+  <hr class="divider"/>
+
+  <div class="student-info">
+    <strong>SAPTARSHI SAMANTA</strong> &nbsp;|&nbsp; ID : 5926 &nbsp;|&nbsp; Class IX / A / 28
+  </div>
+</div>
+
+</body>
+</html>
