@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Student Login Area</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Open Sans', sans-serif; background: #f0f0f0; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ══ TOP HEADER ══ */
+    .top-header {
+      background: #008080; height: 50px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-title { color: #fff; font-size: 1rem; font-weight: 700; }
+    .hamburger { color: #fff; font-size: 1.3rem; cursor: pointer; }
+    .header-right { display: flex; align-items: center; gap: 18px; }
+    .header-right .icon-btn { color: #fff; font-size: 1.15rem; cursor: pointer; }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%; background: #ccc; overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.6);
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ══ LAYOUT ══ */
+    .layout { display: flex; margin-top: 50px; min-height: calc(100vh - 50px); }
+
+    /* ══ SIDEBAR ══ */
+    .sidebar {
+      width: 188px; background: #1a1aff; flex-shrink: 0;
+      position: fixed; top: 50px; left: 0; bottom: 0;
+      z-index: 90; overflow-y: auto; transition: transform 0.28s ease;
+    }
+    .sidebar-school { background: #0000cc; padding: 10px 12px 8px; border-bottom: 2px solid rgba(255,255,255,0.15); }
+    .sidebar-school .sname { color: #fff; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.4; }
+    .sidebar-school .session { color: #fff; font-size: 0.65rem; font-weight: 600; margin-top: 3px; }
+    .sidebar-school .session span { color: #FFE135; font-weight: 800; }
+    .nav-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 11px 14px; color: #fff; font-size: 0.83rem; font-weight: 600;
+      cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.08);
+      transition: background 0.15s; text-decoration: none;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.12); }
+    .nav-item.active { background: rgba(255,255,255,0.18); }
+    .nav-item .left { display: flex; align-items: center; gap: 10px; }
+    .nav-item .left i { width: 16px; text-align: center; font-size: 0.85rem; }
+    .nav-item .arrow { font-size: 0.7rem; opacity: 0.7; }
+
+    /* Overlay */
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 89; }
+    .sidebar-overlay.show { display: block; }
+
+    /* ══ MAIN ══ */
+    .main { margin-left: 188px; flex: 1; display: flex; flex-direction: column; }
+
+    /* Student bar */
+    .student-bar {
+      background: #FFFACD; border-bottom: 2px solid #e0d060;
+      padding: 8px 16px; display: flex; align-items: center; gap: 12px; min-height: 56px;
+    }
+    .student-bar .stu-img { width: 42px; height: 42px; object-fit: contain; flex-shrink: 0; }
+    .student-bar .stu-name { font-size: 0.88rem; font-weight: 700; color: #222; }
+    .student-bar .stu-class { font-size: 0.78rem; color: #555; margin-top: 1px; }
+
+    /* ══ DASHBOARD BODY ══ */
+    .dash-body { flex: 1; position: relative; overflow: hidden; min-height: 580px; }
+    .wave-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(145deg, #fff0f5 0%, #fff8e8 18%, #f0fff4 35%, #f0f4ff 52%, #fff0fa 68%, #fffaf0 85%, #f5f0ff 100%);
+      z-index: 0;
+    }
+    .wave-svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+
+    /* ══ ICON GRID — Desktop 3 cols ══ */
+    .icon-grid {
+      position: relative; z-index: 2;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      padding: 30px 20px 20px 40px; max-width: 1000px;
+    }
+    .icon-tile {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 20px 10px 10px; cursor: pointer; transition: transform 0.2s; text-decoration: none;
+    }
+    .icon-tile:hover { transform: translateY(-4px); }
+    .icon-tile:active { transform: scale(0.96); }
+    .tile-svg { width: 180px; height: 180px; }
+    .tile-label { margin-top: 6px; font-size: 0.92rem; font-weight: 700; color: #e02020; }
+    .tile-label-banner {
+      margin-top: -10px; background: #e02020; color: #fff;
+      font-size: 0.85rem; font-weight: 700; padding: 6px 28px; border-radius: 4px; letter-spacing: 0.04em;
+    }
+
+    /* Bottom nav hidden always */
+    .bottom-nav { display: none !important; }
+
+    /* ══ MOBILE ≤640px ══ */
+    @media (max-width: 640px) {
+      /* Sidebar slides off-screen, toggled by hamburger */
+      .sidebar { transform: translateX(-100%); width: 230px; box-shadow: 4px 0 24px rgba(0,0,0,0.3); }
+      .sidebar.open { transform: translateX(0); }
+
+      /* Full-width main */
+      .main { margin-left: 0; padding-bottom: 0; }
+
+      /* Compact student bar */
+      .student-bar { padding: 6px 12px; min-height: 46px; gap: 8px; }
+      .student-bar .stu-img { width: 32px; height: 32px; }
+      .student-bar .stu-name { font-size: 0.76rem; }
+      .student-bar .stu-class { font-size: 0.68rem; }
+
+      /* 2-column icon grid */
+      .icon-grid { grid-template-columns: repeat(2, 1fr); padding: 16px 10px 20px; max-width: 100%; }
+      .icon-tile { padding: 14px 8px 8px; }
+      .tile-svg { width: 115px; height: 115px; }
+      .tile-label { font-size: 0.76rem; margin-top: 5px; }
+      .tile-label-banner { font-size: 0.7rem; padding: 5px 12px; margin-top: -4px; }
+      .header-title { font-size: 0.85rem; }
+
+      /* Bottom navigation bar */
+      .bottom-nav {
+        display: flex; position: fixed; bottom: 0; left: 0; right: 0;
+        height: 60px; background: #1a1aff; z-index: 100;
+        box-shadow: 0 -3px 12px rgba(0,0,0,0.25);
+      }
+      .bottom-nav a {
+        flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        color: rgba(255,255,255,0.65); font-size: 0.56rem; font-weight: 700;
+        text-decoration: none; gap: 3px;
+        border-right: 1px solid rgba(255,255,255,0.1); transition: background 0.15s; padding: 0 2px;
+      }
+      .bottom-nav a:last-child { border-right: none; }
+      .bottom-nav a i { font-size: 1.1rem; }
+      .bottom-nav a.active { color: #FFE135; background: rgba(255,255,255,0.1); }
+      .bottom-nav a:active { background: rgba(255,255,255,0.18); }
+    }
+
+    @media (max-width: 360px) {
+      .tile-svg { width: 96px; height: 96px; }
+      .tile-label { font-size: 0.66rem; }
+      .icon-grid { padding: 10px 4px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- TOP HEADER -->
+<div class="top-header">
+  <div class="header-left">
+    <span class="hamburger" onclick="toggleSidebar()"><i class="fa fa-bars"></i></span>
+    <span class="header-title">Student Login Area</span>
+  </div>
+  <div class="header-right">
+    <span class="icon-btn"><i class="fa-regular fa-envelope"></i></span>
+    <span class="icon-btn"><i class="fa-regular fa-bell"></i></span>
+    <div class="avatar">
+      <img src="https://erp.vmhschool.com/mecho/assets/images/avatar.png"
+           onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa fa-user\' style=\'color:#555;font-size:16px\'></i>'" alt="avatar"/>
+    </div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-school">
+      <div class="sname">Vivekananda Mission School</div>
+      <div class="session">SESSION &nbsp;: &nbsp;<span>2025–26</span></div>
+    </div>
+    <a class="nav-item active" href="#"><div class="left"><i class="fa fa-home"></i> HOME</div></a>
+    <a class="nav-item" href="#"><div class="left"><i class="fa-regular fa-envelope"></i> Message</div><span class="arrow"><i class="fa fa-chevron-left"></i></span></a>
+    <a class="nav-item" href="class9&id=5926.html"><div class="left"><i class="fa fa-table-list"></i> Marksheet</div><span class="arrow"><i class="fa fa-chevron-left"></i></span></a>
+    <a class="nav-item" href="#"><div class="left"><i class="fa-regular fa-circle-question"></i> Query</div><span class="arrow"><i class="fa fa-chevron-left"></i></span></a>
+    <a class="nav-item" href="#"><div class="left"><i class="fa fa-rotate"></i> Change Password</div></a>
+    <a class="nav-item" href="index.html"><div class="left"><i class="fa fa-power-off"></i> Log Out</div></a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="student-bar">
+      <img class="stu-img"
+        src="https://erp.vmhschool.com/mecho/assets/images/student_icon.png"
+        onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2244%22 height=%2244%22%3E%3Crect width=%2244%22 height=%2244%22 fill=%22%23eee%22 rx=%224%22/%3E%3Ctext x=%2250%25%22 y=%2255%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2226%22%3E📚%3C/text%3E%3C/svg%3E'"
+        alt="student"/>
+      <div>
+        <div class="stu-name">SAPTARSHI SAMANTA &nbsp;( Id : 5926 )</div>
+        <div class="stu-class">IX / A / 28</div>
+      </div>
+    </div>
+
+    <div class="dash-body">
+      <div class="wave-bg"></div>
+      <svg class="wave-svg" viewBox="0 0 1200 700" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,180 Q150,80 350,180 T700,160 T1050,180 T1200,150 L1200,0 L0,0Z" fill="rgba(255,200,220,0.25)"/>
+        <path d="M0,320 Q200,200 500,320 T900,300 T1200,320 L1200,700 L0,700Z" fill="rgba(180,220,255,0.18)"/>
+        <path d="M0,500 Q300,380 650,500 T1200,460 L1200,700 L0,700Z" fill="rgba(200,255,220,0.18)"/>
+        <path d="M0,600 Q400,500 800,600 T1200,570 L1200,700 L0,700Z" fill="rgba(255,220,180,0.15)"/>
+        <path d="M600,0 Q750,150 900,80 T1200,200 L1200,0Z" fill="rgba(220,200,255,0.20)"/>
+      </svg>
+
+      <div class="icon-grid">
+        <!-- Profile -->
+        <div class="icon-tile">
+          <svg class="tile-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="52" r="28" fill="#555"/>
+            <ellipse cx="100" cy="105" rx="32" ry="20" fill="#444"/>
+            <rect x="48" y="108" width="44" height="32" rx="4" fill="#2196F3"/>
+            <rect x="96" y="108" width="44" height="32" rx="4" fill="#1565C0"/>
+            <rect x="92" y="105" width="8" height="38" rx="3" fill="#0D47A1"/>
+            <path d="M68 118 Q52 122 50 132" stroke="#444" stroke-width="10" fill="none" stroke-linecap="round"/>
+            <path d="M132 118 Q148 122 150 132" stroke="#444" stroke-width="10" fill="none" stroke-linecap="round"/>
+          </svg>
+          <div class="tile-label">Profile</div>
+        </div>
+
+        <!-- Marksheet -->
+        <a class="icon-tile" href="class9&id=5926.html">
+          <svg class="tile-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="110" r="68" fill="rgba(180,210,255,0.35)"/>
+            <rect x="62" y="45" width="76" height="120" rx="10" fill="#90CAF9"/>
+            <rect x="68" y="56" width="64" height="90" rx="5" fill="#E3F2FD"/>
+            <circle cx="134" cy="52" r="16" fill="#f44336"/>
+            <text x="134" y="57" text-anchor="middle" font-size="16" font-weight="bold" fill="white">!</text>
+            <rect x="74" y="66" width="44" height="12" rx="6" fill="#64B5F6"/>
+            <rect x="74" y="84" width="32" height="12" rx="6" fill="#42A5F5"/>
+            <rect x="74" y="102" width="38" height="12" rx="6" fill="#90CAF9"/>
+            <circle cx="100" cy="154" r="7" fill="#90A4AE"/>
+          </svg>
+          <div class="tile-label">Marksheet</div>
+        </a>
+
+        <!-- Message -->
+        <div class="icon-tile">
+          <svg class="tile-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <rect x="62" y="38" width="76" height="124" rx="10" fill="#78909C"/>
+            <rect x="68" y="50" width="64" height="90" rx="5" fill="#CFD8DC"/>
+            <circle cx="132" cy="46" r="16" fill="#f44336"/>
+            <text x="132" y="51" text-anchor="middle" font-size="16" font-weight="bold" fill="white">!</text>
+            <rect x="75" y="62" width="40" height="14" rx="7" fill="#42A5F5"/>
+            <rect x="75" y="82" width="28" height="14" rx="7" fill="#1E88E5"/>
+            <rect x="75" y="102" width="34" height="14" rx="7" fill="#64B5F6"/>
+            <circle cx="100" cy="152" r="7" fill="#90A4AE"/>
+          </svg>
+          <div class="tile-label">Message</div>
+        </div>
+
+        <!-- Query -->
+        <div class="icon-tile">
+          <svg class="tile-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <text x="85" y="165" font-size="150" font-weight="900" fill="#e53935" font-family="Arial Black, sans-serif">?</text>
+            <circle cx="58" cy="110" r="14" fill="#d0d0d0"/>
+            <ellipse cx="58" cy="140" rx="12" ry="18" fill="#bdbdbd"/>
+            <line x1="46" y1="125" x2="34" y2="145" stroke="#bdbdbd" stroke-width="6" stroke-linecap="round"/>
+            <line x1="70" y1="125" x2="80" y2="145" stroke="#bdbdbd" stroke-width="6" stroke-linecap="round"/>
+          </svg>
+          <div class="tile-label-banner">Ask Your Query</div>
+        </div>
+
+        <!-- Change Password -->
+        <div class="icon-tile">
+          <svg class="tile-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <rect x="42" y="95" width="116" height="80" rx="10" fill="#212121"/>
+            <path d="M62 95 Q62 42 100 42 Q138 42 138 95" stroke="#424242" stroke-width="16" fill="none" stroke-linecap="round"/>
+            <circle cx="100" cy="126" r="12" fill="#616161"/>
+            <rect x="95" y="130" width="10" height="18" rx="3" fill="#616161"/>
+            <text x="26" y="198" font-size="22" fill="#555" font-weight="bold" letter-spacing="6">✱ ✱ ✱ _</text>
+          </svg>
+          <div class="tile-label">Change Password</div>
+        </div>
+
+        <!-- Log Out -->
+        <div class="icon-tile" onclick="window.location.href='index.html'">
+          <svg class="tile-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="82" fill="#e53935"/>
+            <circle cx="100" cy="100" r="62" fill="#c62828"/>
+            <line x1="100" y1="44" x2="100" y2="100" stroke="white" stroke-width="14" stroke-linecap="round"/>
+            <path d="M62 68 A52 52 0 1 0 138 68" stroke="white" stroke-width="14" fill="none" stroke-linecap="round"/>
+          </svg>
+          <div class="tile-label">Log Out</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('show');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('show');
+  }
+</script>
+</body>
+</html>
